@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chess Board</title>
+    <style>
+        /* Устанавливаем ширину SVG на 50% от экрана */
+        svg {
+            width: 40%;
+            height: 40%;
+            align-items: center;
+            display: block;
+            margin: auto;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chess Board</h1>
+    <div>
+        <!-- Отображаем SVG-представление доски -->
+        {{ board_svg|safe }}
+    </div>
+    <h2 id="move">Move: </h2>
+    <form id="next_move_form" action="/move" method="post">
+        <input type="hidden" id="move_input" name="move">
+        <button type="submit">Next Move</button>
+    </form>
+    <script>
+        const squares = document.querySelectorAll('rect, use');
+        let moveCount = 0;
+        squares.forEach(square => {
+            square.addEventListener('click', function(event) {
+                let position = '';
+                if (this.tagName === 'rect') {
+                    position = this.getAttribute('class').split(' ')[2];
+                } else if (this.tagName === 'use') {
+                    const transform = this.getAttribute('transform');
+                    position = parseTransform(transform);
+                    console.log(position)
+                }
+
+                if (position) {
+                    document.getElementById('move').textContent += position;
+                    document.getElementById('move_input').value += position;
+                    moveCount++;
+                
+                    if (moveCount > 1) {
+                        document.getElementById('next_move_form').submit();
+                    }
+                };
+            });
+        });
+        function parseTransform(transform) {
+            const matches = transform.match(/translate\(([^,]+),\s*([^)]+)\)/);
+            var labels = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+            var labels2 = ['1', '2', '3', '4', '5', '6', '7', '8']
+            if (matches) {
+                const x = parseFloat(matches[1]);
+                const y = parseFloat(matches[2]);
+                return labels[x / 45] + labels2[Math.abs(y - 315) / 45];
+            }
+            return '';
+        }
+    </script>
+</body>
+</html>
