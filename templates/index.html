@@ -16,16 +16,24 @@
     </style>
 </head>
 <body>
-    <h1>Chess Board</h1>
+    <h1>Chess Board (r-restart)</h1> <!-- Исправление тега h1 -->
     <div>
         <!-- Отображаем SVG-представление доски -->
         {{ board_svg|safe }}
     </div>
     <h2 id="move">Move: </h2>
+    <!-- <form id="choose_color_form" action="/choose_color" method="post">
+        <button type="submit" name="color" value="white">Play as White</button>
+        <button type="submit" name="color" value="black">Play as Black</button>
+    </form>     -->
     <form id="next_move_form" action="/move" method="post">
         <input type="hidden" id="move_input" name="move">
         <button type="submit">Next Move</button>
     </form>
+    <form id="restart" action="/restart" method="get">
+        <button type="submit">Restart</button>
+    </form>
+    
     <script>
         const squares = document.querySelectorAll('rect, use');
         let moveCount = 0;
@@ -62,6 +70,18 @@
             }
             return '';
         }
+        (document).on('keydown',function (event) {
+            if (event.key=='r') {
+                
+            }
+        })
+    </script>
+    <script>        
+        document.addEventListener('keydown',function (event) {
+            if (event.key == 'r'){
+                document.getElementById('restart').submit();
+            }
+        });
     </script>
 </body>
 </html>
